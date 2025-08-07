@@ -1,0 +1,34 @@
+{
+  "name": "la-space_task",
+  "version": "0.1.0",
+  "description": "Technical screening task for C developer",
+  "main": "main.c",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "C",
+    "ClangD",
+    "Clang-Tidy",
+    "Clang-Format",
+    "Husky",
+    "commitlint",
+    "pre-commit",
+    "commit-msg",
+    "gcc",
+    "gdb",
+    "clang",
+    "LLVM"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Dmitriy-Frostoff/la-space_task.git"
+  },
+  "author": "Dmitriy Frostoff",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Dmitriy-Frostoff/la-space_task/issues"
+  },
+  "homepage": "https://github.com/Dmitriy-Frostoff/la-space_task#readme"
+}
