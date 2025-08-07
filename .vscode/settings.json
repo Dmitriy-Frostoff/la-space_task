@@ -1,0 +1,60 @@
+{
+  "editor.formatOnSave": false,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "vue",
+    "markdown",
+    "json"
+  ],
+  // Runs Prettier, then ESLint
+  "editor.codeActionsOnSave": {
+    "source.formatDocument": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+  // disable Vetur extension validating
+  "vetur.validation.template": false,
+  // ESLint settings
+  "eslint.options": {
+    "overrideConfigFile": "./configs/eslint/.eslintrc.cjs",
+    "ignorePath": "./configs/eslint/.eslintignore"
+  },
+  // Prettier settings
+  "prettier.configPath": "./configs/prettier/prettier.config.js",
+  "prettier.ignorePath": "./configs/prettier/.prettierignore",
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[c]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  "[cpp]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+  },
+  "clangd.path": "C:\\Tools\\LLVM\\bin\\clangd.exe",
+  "clangd.arguments": [
+    "--log=verbose",
+    "--pretty",
+    "--background-index",
+    "--clang-tidy",
+    "--header-insertion=iwyu",
+    "--completion-style=detailed",
+    "--enable-config"
+  ],
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "C_Cpp.default.compilerPath": "C:\\Tools\\LLVM\\bin",
+  "files.eol": "\n"
+}
