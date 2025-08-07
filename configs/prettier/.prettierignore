@@ -1,0 +1,2 @@
+# ignore path is relative to the .prettierignore file
+../../node_modules
