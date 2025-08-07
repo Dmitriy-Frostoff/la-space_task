@@ -1,0 +1,20 @@
+Language: Cpp
+BasedOnStyle: LLVM
+IndentWidth: 2
+PointerAlignment: Right
+# Enable K&R style
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: false
+  AfterControlStatement: false
+  AfterFunction: false
+  BeforeElse: false
+# Strict rules from Mozilla style
+AccessModifierOffset: -2
+AllowShortFunctionsOnASingleLine: None
+ColumnLimit: 80
+AlwaysBreakTemplateDeclarations: Yes
+QualifierAlignment: Left
+# Actual standards
+Cpp11BracedListStyle: true
+Standard: c++20

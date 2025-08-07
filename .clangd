@@ -1,0 +1,64 @@
+---
+If:
+  PathMatch: .*\.(cpp|cc|cxx)
+CompileFlags:
+  Add:
+    [
+      --target=x86_64-w64-windows-gnu,
+      -std=c++20,
+      -Wall,
+      '-I',
+      'C:/Tools/msys64/ucrt64/include',
+    ]
+  CompilationDatabase: ./build/compile_commands.json
+  Compiler: C:\\Tools\\LLVM\\bin\\clang++.exe
+Index:
+  Background: Build
+  StandardLibrary: Yes
+Diagnostics:
+  UnusedIncludes: Strict
+Completion:
+  AllScopes: Yes
+  ArgumentLists: FullPlaceholders
+  HeaderInsertion: IWYU
+  CodePatterns: All
+InlayHints:
+  BlockEnd: false
+  Designators: false
+  Enabled: true
+  ParameterNames: false
+  DeducedTypes: true
+  DefaultArguments: false
+  TypeNameLimit: 24
+---
+If:
+  PathMatch: .*\.(c|h)
+CompileFlags:
+  Compiler: C:\\Tools\\LLVM\\bin\\clang.exe
+  Add:
+    [
+      --target=x86_64-w64-windows-gnu,
+      -std=c17,
+      -Wall,
+      '-I',
+      'C:/Tools/msys64/ucrt64/include',
+    ]
+  CompilationDatabase: ./build/compile_commands.json
+Index:
+  Background: Build
+  StandardLibrary: Yes
+Diagnostics:
+  UnusedIncludes: Strict
+Completion:
+  AllScopes: Yes
+  ArgumentLists: FullPlaceholders
+  HeaderInsertion: IWYU
+  CodePatterns: All
+InlayHints:
+  BlockEnd: false
+  Designators: false
+  Enabled: true
+  ParameterNames: false
+  DeducedTypes: true
+  DefaultArguments: false
+  TypeNameLimit: 24
