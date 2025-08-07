@@ -1,0 +1,3 @@
+# --no i.e. --no-install (--no-install us deprecated)
+# `--` mean that everything after it is consider to be not a npm option (but scsipt, command?)
+npx --no -- commitlint -g ./configs/commitlint/commitlint.config.js --edit $1
