@@ -5,7 +5,7 @@ CompileFlags:
   Add:
     [
       --target=x86_64-w64-windows-gnu,
-      -std=c++20,
+      -std=c++23,
       -Wall,
       '-I',
       'C:/Tools/msys64/ucrt64/include',
@@ -38,7 +38,7 @@ CompileFlags:
   Add:
     [
       --target=x86_64-w64-windows-gnu,
-      -std=c17,
+      -std=c23,
       -Wall,
       '-I',
       'C:/Tools/msys64/ucrt64/include',

@@ -3,10 +3,12 @@
 
 #include "./config.h"
 
+int qsort_compare_func(const void *, const void *);
+
 TASK_ID register_task(task_callback, unsigned short arg, unsigned short delay);
 Task get_callback(void);
-int remove_task(unsigned short id);
-int change_task_delay(unsigned short id, unsigned short new_delay);
+int remove_task(TASK_ID id);
+int change_task_delay(TASK_ID id, unsigned short new_delay);
 void show_task_info(unsigned short arg);
 
 #endif

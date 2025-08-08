@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <time.h>
 
 enum global_variables { MAX_TASK_QUANTITY = 50 };
@@ -43,9 +44,16 @@ typedef struct task_template {
       created_timestamp; /**< timestamp of the Task instance creating */
 } Task;
 
+/**
+ *  @brief Callback type for sorting function via qsort of <stdlib.h>
+ *  e.g. see{qsort_compare_func}
+ *
+ */
+typedef int (*qsort_compare_callback)(const void *num_a, const void *num_b);
+
 /** Global counter for id range [0:50) */
 TASK_ID task_id_count = 0;
 /** Quantity of the ready task (i.e. when delay time is gone) range [0:50) */
-unsigned short prepared_tasks_count = 0;
+TASK_ID prepared_tasks_count = 0;
 
 #endif
