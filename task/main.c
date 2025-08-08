@@ -2,6 +2,10 @@
 #include "./utils.h"
 
 int main(void) {
-  printf("%s\n", "Hello World!");
+  static Task tasks_array[MAX_TASK_QUANTITY] = {};
+
+  while (task_id_count < MAX_TASK_QUANTITY) {
+  }
+
   return 0;
 }
