@@ -1,11 +1,7 @@
-#include "./config.h"
-#include "./utils.h"
+#include "./global_variables.h"
+#include "./module_run_tasks_after_delay.h"
 
 int main(void) {
-  static Task tasks_array[MAX_TASK_QUANTITY] = {};
-
-  // while (task_id_count < MAX_TASK_QUANTITY) {
-  // }
 
   return 0;
 }

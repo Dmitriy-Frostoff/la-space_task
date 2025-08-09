@@ -1,11 +1,19 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
 
-enum global_variables { MAX_TASK_QUANTITY = 50 };
+enum global_variables {
+  MAX_TASK_QUANTITY = 50,  /**< size of array for Tasks instances */
+  MIN_DELAY_FOR_SORT = 50, /**< min delay to run qsort in the Tasks array */
+  RATIO_SEC_MS = 1000LL,   /**< for converting sec => ms */
+  RATIO_NANOSEC_MSEC = 1000000LL,  /**< for converting nsec => ms */
+  RATIO_SEC_NANOSEC = 1000000000LL /**< for converting sec => ns */
+};
 
 /**
  *  @details
@@ -31,6 +39,14 @@ typedef void (*task_callback)(unsigned short arg);
  *  - @type{unsigned short} delay - delay time (ms) to freeze @link{callback}
  *    calling
  *  - @type{TASK_ID} id - id of the current Task instance
+ *  - @type{struct timespec} created_timespec - timespec structure of
+ *    the Task instance creating
+ *    @note Before usage (!transformation due to @link{delay} measurement units
+ *    (e.g. ms) expected!) do this:
+ *    e.g. (Task.created_timespec.tv_sec * 1000LL +
+ *      Task.created_timespec.tv_nsec / 1000000LL) or
+ *    (Task.created_timespec.tv_sec * RATIO_SEC_MS +
+ *      Task.created_timespec.tv_nsec / RATIO_NANOSEC_MSEC)
  *
  */
 typedef struct task_template {
@@ -40,8 +56,8 @@ typedef struct task_template {
       delay;  /**< delay time (ms) to freeze @link{callback} calling */
   TASK_ID id; /**< id of the current Task (set up at the creating moment
                  manually!) */
-  unsigned short
-      created_timestamp; /**< timestamp of the Task instance creating */
+  struct timespec created_timespec; /**< created_timespec structure of the Task
+                                       instance creating */
 } Task;
 
 /**
@@ -50,10 +66,5 @@ typedef struct task_template {
  *
  */
 typedef int (*qsort_compare_callback)(const void *num_a, const void *num_b);
-
-/** Global counter for id range [0:50) */
-TASK_ID task_id_count = 0;
-/** Quantity of the ready task (i.e. when delay time is gone) range [0:50) */
-TASK_ID prepared_tasks_count = 0;
 
 #endif
