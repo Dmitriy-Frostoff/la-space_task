@@ -2,7 +2,6 @@
 #define UTILS_H
 
 #include "./config.h"
-#include "./utils.h"
 
 TASK_ID register_task(task_callback func_to_call, unsigned short arg,
                       unsigned short delay);

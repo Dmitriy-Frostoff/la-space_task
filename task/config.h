@@ -7,8 +7,11 @@
 #include <string.h>
 #include <time.h>
 
+#include "./register_task_config.h"
+
 enum global_variables {
-  MAX_TASK_QUANTITY = 50,  /**< size of array for Tasks instances */
+  // MAX_TASK_QUANTITY = 50,  /**< size of array for Tasks instances */
+  MAX_TASK_QUANTITY = 3,   /**< size of array for Tasks instances */
   MIN_DELAY_FOR_SORT = 50, /**< min delay to run qsort in the Tasks array */
   RATIO_SEC_MS = 1000LL,   /**< for converting sec => ms */
   RATIO_NANOSEC_MSEC = 1000000LL,  /**< for converting nsec => ms */
@@ -16,11 +19,10 @@ enum global_variables {
 };
 
 /**
- *  @details
- *  - @type{unsigned short} TASK_ID - type for id for the Task instance
+ *  @brief type for global Tasks counter
  *
  */
-typedef unsigned short TASK_ID; /**< type for id for the Task instance */
+typedef unsigned short TASK_COUNTER; /**< type for tasks counter */
 
 /**
  *  @brief Callback to use after delay time in the task is gone
@@ -53,18 +55,11 @@ typedef struct task_template {
   task_callback callback;  /**< callback to call after delay time is gone */
   unsigned short func_arg; /**< argument to call @link{callback} with */
   unsigned short
-      delay;  /**< delay time (ms) to freeze @link{callback} calling */
-  TASK_ID id; /**< id of the current Task (set up at the creating moment
+      delay;       /**< delay time (ms) to freeze @link{callback} calling */
+  TASK_COUNTER id; /**< id of the current Task (set up at the creating moment
                  manually!) */
   struct timespec created_timespec; /**< created_timespec structure of the Task
                                        instance creating */
 } Task;
-
-/**
- *  @brief Callback type for sorting function via qsort of <stdlib.h>
- *  e.g. see{qsort_compare_func}
- *
- */
-typedef int (*qsort_compare_callback)(const void *num_a, const void *num_b);
 
 #endif
