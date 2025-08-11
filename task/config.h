@@ -10,8 +10,7 @@
 #include "./register_task_config.h"
 
 enum global_variables {
-  // MAX_TASK_QUANTITY = 50,  /**< size of array for Tasks instances */
-  MAX_TASK_QUANTITY = 3,   /**< size of array for Tasks instances */
+  MAX_TASK_QUANTITY = 50,  /**< size of array for Tasks instances */
   MIN_DELAY_FOR_SORT = 50, /**< min delay to run qsort in the Tasks array */
   RATIO_SEC_MS = 1000LL,   /**< for converting sec => ms */
   RATIO_NANOSEC_MSEC = 1000000LL,  /**< for converting nsec => ms */

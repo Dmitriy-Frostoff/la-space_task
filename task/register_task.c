@@ -1,7 +1,5 @@
+#include "./global_variables.h"
 #include "./utils.h"
-
-extern TASK_COUNTER task_count;
-extern Task tasks_array[];
 
 /**
  *  @brief Register task in the @link{tasks_array[]} to delay its' usage at
@@ -10,7 +8,7 @@ extern Task tasks_array[];
  *  @note ! Impure function !
  *  - mutates the outer @link{task_count}
  *  - mutates the outer @link{tasks_array}
- *  - implicit dependency on @type{TASK_ID}
+ *  - implicit dependency on @type{PROMISE_TASK_ID}
  *  - implicit dependency on @type{task_callback}
  *  - implicit dependency on @type{Task}
  *  - implicit dependency on @type{struct timespec} of <time.h>
@@ -29,25 +27,27 @@ extern Task tasks_array[];
  *    `task` is created via `register_task` function instance of @link{Task} and
  *    nested to the @link{tasks_array}
  *
- *  @return {TASK_ID} - structure of complex type with ID or with error happened
- *    details.
- *    @see{TASK_ID} for details and examples below for clarification
- *  @throw TASK_ID.type = ERROR_CODE
- *    - TASK_ID.register_task_result.REGISTER_TASK_CODES =>
+ *  @return {PROMISE_TASK_ID} - structure of complex type
+ *    @see{PROMISE_TASK_ID} for details and examples below for clarification how
+ *    to handle it
+ *  @throw PROMISE_TASK_ID.type = ERROR_CODE
+ *    - PROMISE_TASK_ID.register_task_result.REGISTER_TASK_CODES =>
  *      ARRAY_OF_TASKS_FULL - no free space to add extra Task
  *      TIMESPEC_GET_ERROR - problems occured at @link{timespec_get}() function
  *      calling
  *
  *  @example
- *    TASK_ID log_id = register_task(some_callback, 400, 400);
+ *    PROMISE_TASK_ID log_id = register_task(some_callback, 400, 400);
+ *    TASK_COUNTER task_id;
  *
  *    switch (log_id.type) {
  *    case ID:
- *      printf("ID: %hd", log_id.register_task_result.TASK_ID);
- *      OUTPUT: e.g. 9 (id = 9)
+ *      task_id = log_id.register_task_result.TASK_ID;
+ *      printf("task_id: %hd\n", task_id);
+ *      OUTPUT: e.g. 9 (task_id: 9)
  *      break;
  *    case ERROR_CODE:
- *      printf("ERROR_CODE: %hd",
+ *      printf("ERROR_CODE: %hd\n",
  *        log_id.register_task_result.REGISTER_TASK_CODES);
  *      OUTPUT: e.g. ARRAY_OF_TASKS_FULL
  *      or
@@ -60,13 +60,13 @@ extern Task tasks_array[];
  *    }
  *
  */
-TASK_ID register_task(task_callback func_to_call, unsigned short arg,
-                      unsigned short delay) {
+PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
+                              unsigned short delay) {
   // prevent adding excessive task
   if (task_count >= MAX_TASK_QUANTITY) {
-    return (TASK_ID){.type = ERROR_CODE,
-                     .register_task_result.REGISTER_TASK_CODES =
-                         ARRAY_OF_TASKS_FULL};
+    return (PROMISE_TASK_ID){.type = ERROR_CODE,
+                             .register_task_result.REGISTER_TASK_CODES =
+                                 ARRAY_OF_TASKS_FULL};
   }
 
   // create Task instance
@@ -79,9 +79,9 @@ TASK_ID register_task(task_callback func_to_call, unsigned short arg,
   // ts.tv_sec and ts.tv_nsec are set ? => 1(OK) (two fileds are set, 1 is base
   // for @link{TIME_UTC})
   if (written_var_count == 0) {
-    return (TASK_ID){.type = ERROR_CODE,
-                     .register_task_result.REGISTER_TASK_CODES =
-                         TIMESPEC_GET_ERROR};
+    return (PROMISE_TASK_ID){.type = ERROR_CODE,
+                             .register_task_result.REGISTER_TASK_CODES =
+                                 TIMESPEC_GET_ERROR};
   }
 
   // set up the @link{task.created_timespec}
@@ -116,5 +116,6 @@ TASK_ID register_task(task_callback func_to_call, unsigned short arg,
     qsort(tasks_array, task_count, sizeof(Task), qsort_compare_func);
   }
 
-  return (TASK_ID){.type = ID, .register_task_result.TASK_ID = task_count};
+  return (PROMISE_TASK_ID){.type = ID,
+                           .register_task_result.TASK_ID = task_count};
 }

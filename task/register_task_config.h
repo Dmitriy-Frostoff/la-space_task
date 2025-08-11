@@ -44,7 +44,7 @@ union union_id {
 typedef enum task_id_types {
   ID = 0,        /**< Everything OK, ID as result */
   ERROR_CODE = 1 /**< Errors occured */
-} TASK_ID_TYPE;
+} PROMISE_TASK_ID_TYPE;
 
 /**
  *  @details
@@ -56,14 +56,17 @@ typedef enum task_id_types {
  *    i.e. (OK | ARRAY_OF_TASKS_FULL | TIMESPEC_GET_ERROR)
  *
  *  @example
- *    TASK_ID log_id = register_task(some_callback, 400, 400);
+ *    PROMISE_TASK_ID log_id = register_task(some_callback, 400, 400);
+ *    TASK_COUNTER task_id;
+ *
  *    switch (log_id.type) {
  *    case ID:
- *      printf("ID: %hd", log_id.register_task_result.TASK_ID);
- *      OUTPUT: e.g. 9 (id = 9)
+ *      task_id = log_id.register_task_result.TASK_ID;
+ *      printf("task_id: %hd\n", task_id);
+ *      OUTPUT: e.g. 9 (task_id: 9)
  *      break;
  *    case ERROR_CODE:
- *      printf("ERROR_CODE: %hd",
+ *      printf("ERROR_CODE: %hd\n",
  *        log_id.register_task_result.REGISTER_TASK_CODES);
  *      OUTPUT: e.g. ARRAY_OF_TASKS_FULL
  *      or
@@ -77,8 +80,8 @@ typedef enum task_id_types {
  *
  */
 typedef struct register_task_result {
-  TASK_ID_TYPE type;                   /**< ID | ERROR_CODE */
+  PROMISE_TASK_ID_TYPE type;           /**< ID | ERROR_CODE */
   union union_id register_task_result; /**< TASK_ID | REGISTER_TASK_CODES */
-} TASK_ID;
+} PROMISE_TASK_ID;
 
 #endif
