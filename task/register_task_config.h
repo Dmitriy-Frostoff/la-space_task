@@ -37,21 +37,21 @@ union union_id {
 /**
  *  @details
  *  Possible types to show what is written in the @link{union union_id} now
- *  - ID - Everything OK, ID as result
+ *  - SUCCESS - Everything OK, possible to get TASK_ID as a result
  *  - ERROR_CODE - Errors occured
  *
  */
 typedef enum task_id_types {
-  ID = 0,        /**< Everything OK, ID as result */
+  SUCCESS = 0,   /**< Everything OK, ID as result */
   ERROR_CODE = 1 /**< Errors occured */
 } PROMISE_TASK_ID_TYPE;
 
 /**
  *  @details
  *  Structure for handling results of @link{register_task} function execution.
- *  - type - (ID | ERROR_CODE)
+ *  - type - (SUCCESS | ERROR_CODE)
  *  - register_task_result - union @link{union union_id}, that is
- *    @type{unsigned short} for ID (everything is OK) or
+ *    @type{unsigned short} for TASK_ID (SUCCESS, everything is OK) or
  *    one of error codes for ERROR_CODE
  *    i.e. (OK | ARRAY_OF_TASKS_FULL | TIMESPEC_GET_ERROR)
  *
@@ -60,7 +60,7 @@ typedef enum task_id_types {
  *    TASK_COUNTER task_id;
  *
  *    switch (log_id.type) {
- *    case ID:
+ *    case SUCCESS:
  *      task_id = log_id.register_task_result.TASK_ID;
  *      printf("task_id: %hd\n", task_id);
  *      OUTPUT: e.g. 9 (task_id: 9)

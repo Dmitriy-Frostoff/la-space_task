@@ -41,7 +41,7 @@
  *    TASK_COUNTER task_id;
  *
  *    switch (log_id.type) {
- *    case ID:
+ *    case SUCCESS:
  *      task_id = log_id.register_task_result.TASK_ID;
  *      printf("task_id: %hd\n", task_id);
  *      OUTPUT: e.g. 9 (task_id: 9)
@@ -116,6 +116,6 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
     qsort(tasks_array, task_count, sizeof(Task), qsort_compare_func);
   }
 
-  return (PROMISE_TASK_ID){.type = ID,
+  return (PROMISE_TASK_ID){.type = SUCCESS,
                            .register_task_result.TASK_ID = task_count};
 }
