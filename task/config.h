@@ -7,8 +7,6 @@
 #include <string.h>
 #include <time.h>
 
-#include "./register_task_config.h"
-
 enum global_variables {
   MAX_TASK_QUANTITY = 50,  /**< size of array for Tasks instances */
   MIN_DELAY_FOR_SORT = 50, /**< min delay to run qsort in the Tasks array */
@@ -60,5 +58,17 @@ typedef struct task_template {
   struct timespec created_timespec; /**< created_timespec structure of the Task
                                        instance creating */
 } Task;
+
+/**
+ *  @details
+ *  Possible types to show what is written in the Promise_* now
+ *  - SUCCESS - Everything OK, possible to get data as a result
+ *  - ERROR_CODE - Errors occured
+ *
+ */
+typedef enum promise_common_type {
+  SUCCESS = 0,   /**< Everything OK, ID as result */
+  ERROR_CODE = 1 /**< Errors occured */
+} PROMISE_TYPE;
 
 #endif

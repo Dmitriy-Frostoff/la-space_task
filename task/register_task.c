@@ -1,9 +1,11 @@
 #include "./global_variables.h"
+#include "./register_task_config.h"
 #include "./utils.h"
 
 /**
  *  @brief Register task in the @link{tasks_array[]} to delay its' usage at
- *    @link{delay} ms
+ *  @link{delay} ms and get the strucure @link{PROMISE_TASK_ID} for saving
+ *  registered task's id
  *
  *  @note ! Impure function !
  *  - mutates the outer @link{task_count}
@@ -17,6 +19,9 @@
  *  - implicit dependency on @callback{timespec_get} function of <time.h>
  *  - under the hood uses @link{qsort} function from <stdlib.h> for sorting
  *    descending @link{tasks_array}
+ *
+ *  @note Returns promise like structure @link{PROMISE_TASK_ID}! Examine the
+ *  example below how to handle it properly!
  *
  *  @param {task_callback} func_to_call - callback that user will call with
  *    @link{arg} after @link{delay} ms is gone
@@ -32,9 +37,9 @@
  *    to handle it
  *  @throw PROMISE_TASK_ID.type = ERROR_CODE
  *    - PROMISE_TASK_ID.register_task_result.REGISTER_TASK_CODES =>
- *      ARRAY_OF_TASKS_FULL - no free space to add extra Task
- *      TIMESPEC_GET_ERROR - problems occured at @link{timespec_get}() function
- *      calling
+ *      REGISTER_TASK_ARRAY_OF_TASKS_FULL - no free space to add extra Task
+ *      REGISTER_TASK_TIMESPEC_GET_ERROR - problems occured at
+ *      @link{timespec_get}() function calling
  *
  *  @example
  *    PROMISE_TASK_ID log_id = register_task(some_callback, 400, 400);
@@ -49,9 +54,9 @@
  *    case ERROR_CODE:
  *      printf("ERROR_CODE: %hd\n",
  *        log_id.register_task_result.REGISTER_TASK_CODES);
- *      OUTPUT: e.g. ARRAY_OF_TASKS_FULL
+ *      OUTPUT: e.g. REGISTER_TASK_ARRAY_OF_TASKS_FULL
  *      or
- *      OUTPUT: e.g. TIMESPEC_GET_ERROR
+ *      OUTPUT: e.g. REGISTER_TASK_TIMESPEC_GET_ERROR
  *      break;
  *    default:
  *      fprintf(stderr, "Error(%s() function at %d): ups... Unknown
@@ -66,22 +71,26 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
   if (task_count >= MAX_TASK_QUANTITY) {
     return (PROMISE_TASK_ID){.type = ERROR_CODE,
                              .register_task_result.REGISTER_TASK_CODES =
-                                 ARRAY_OF_TASKS_FULL};
+                                 REGISTER_TASK_ARRAY_OF_TASKS_FULL};
   }
 
-  // create Task instance
+  // create pure @link{Task} instance
   Task task = {};
+
+  // create pure @link{PROMISE_TASK_ID} instance
+  // (assign to it further)
+  PROMISE_TASK_ID result_promise_task_id = {};
 
   // set up current timestamp
   struct timespec ts = {};
   int written_var_count = timespec_get(&ts, TIME_UTC);
 
-  // ts.tv_sec and ts.tv_nsec are set ? => 1(OK) (two fileds are set, 1 is base
+  // ts.tv_sec and ts.tv_nsec are set ? => 1(OK) (two fields are set, 1 is base
   // for @link{TIME_UTC})
   if (written_var_count == 0) {
     return (PROMISE_TASK_ID){.type = ERROR_CODE,
                              .register_task_result.REGISTER_TASK_CODES =
-                                 TIMESPEC_GET_ERROR};
+                                 REGISTER_TASK_TIMESPEC_GET_ERROR};
   }
 
   // set up the @link{task.created_timespec}
@@ -102,6 +111,10 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
   // nest the task instance to the @kink{tasks_array}
   tasks_array[task_count] = task;
 
+  // update @link{result_promise_task_id}
+  result_promise_task_id = (PROMISE_TASK_ID){
+      .type = SUCCESS, .register_task_result.TASK_ID = task_count};
+
   // update @link{task_count} counter
   task_count += 1;
 
@@ -116,6 +129,5 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
     qsort(tasks_array, task_count, sizeof(Task), qsort_compare_func);
   }
 
-  return (PROMISE_TASK_ID){.type = SUCCESS,
-                           .register_task_result.TASK_ID = task_count};
+  return result_promise_task_id;
 }
