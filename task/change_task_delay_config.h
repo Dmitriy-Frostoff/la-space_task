@@ -6,7 +6,7 @@
 /**
  *  @details
  *  - CHANGE_TASK_DELAY_DONE_SUCCESSFULLY - no errors, the task's delay changed
- *    succesfully
+ *    successfully
  *  - CHANGE_TASK_DELAY_ARRAY_OF_TASKS_EMPTY - current task counter value is 0
  *  - CHANGE_TASK_DELAY_TASK_ID_IS_NOT_DETERMINED - no such task with given ID
  *  - CHANGE_TASK_DELAY_TIMESPEC_GET_ERROR - at the moment of getting current
@@ -15,7 +15,7 @@
  */
 enum Change_task_delay_errors_codes {
   CHANGE_TASK_DELAY_DONE_SUCCESSFULLY = 0, /**< no errors, the task's delay
-                                            * changed succesfully */
+                                            * changed successfully */
   CHANGE_TASK_DELAY_ARRAY_OF_TASKS_EMPTY =
       1, /**< current task counter value is 0 */
   CHANGE_TASK_DELAY_TASK_ID_IS_NOT_DETERMINED =

@@ -53,6 +53,7 @@
  *
  *    switch (log_change_task_delay.type) {
  *    case SUCCESS:
+ *      printf("log_change_task_delay: CHANGE_TASK_DELAY_DONE_SUCCESSFULLY\n");
  *      break;
  *    case ERROR_CODE:
  *      printf("ERROR_CODE: %hd\n",
@@ -111,9 +112,16 @@ PROMISE_CHANGE_TASK_DELAY change_task_delay(TASK_COUNTER id,
       tasks_array[i].created_timespec = ts;
       tasks_array[i].delay = new_delay;
 
-      // sort @link{tasks_array} descending via Task.delay (ms)
-      sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY,
-                                     task_count);
+      // sort @link{tasks_array} only if:
+      // - more than one task in it
+      // - current task index > 0 and
+      //   current task's delay > previous task's delay
+      if ((task_count > 1) &&
+          ((i > 0) && (tasks_array[i].delay > tasks_array[i - 1].delay))) {
+        // sort @link{tasks_array} descending via Task.delay (ms)
+        sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY,
+                                       task_count);
+      }
 
       return (PROMISE_CHANGE_TASK_DELAY){
           .type = SUCCESS, .CODES_RESULT = CHANGE_TASK_DELAY_DONE_SUCCESSFULLY};
@@ -125,9 +133,17 @@ PROMISE_CHANGE_TASK_DELAY change_task_delay(TASK_COUNTER id,
       tasks_array[task_count - 1 - i].created_timespec = ts;
       tasks_array[task_count - 1 - i].delay = new_delay;
 
-      // sort @link{tasks_array} descending via Task.delay (ms)
-      sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY,
-                                     task_count);
+      // sort @link{tasks_array} only if:
+      // - more than one task in it
+      // - current task index > 0 and
+      //   current task's delay > previous task's delay
+      if ((task_count > 1) && ((task_count - 1 - i > 0) &&
+                               (tasks_array[task_count - 1 - i].delay >
+                                tasks_array[task_count - 2 - i].delay))) {
+        // sort @link{tasks_array} descending via Task.delay (ms)
+        sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY,
+                                       task_count);
+      }
 
       return (PROMISE_CHANGE_TASK_DELAY){
           .type = SUCCESS, .CODES_RESULT = CHANGE_TASK_DELAY_DONE_SUCCESSFULLY};
