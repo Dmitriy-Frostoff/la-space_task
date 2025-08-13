@@ -4,8 +4,7 @@
 #include "./utils.h"
 
 /**
- *  @brief
- *
+ *  @brief Remove the task via valid id from @link{tasks_array}
  *
  *  @note ! Impure function !
  *  - mutates the outer @link{tasks_array}
