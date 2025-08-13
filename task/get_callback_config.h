@@ -11,7 +11,7 @@
  *  - GET_CALLBACK_PENDING - the least task's delay is not gone yet
  *
  */
-enum get_callback_errors_codes {
+enum Get_callback_errors_codes {
   GET_CALLBACK_ARRAY_OF_TASKS_EMPTY = 1,
   /**< current task counter value is 0 */
   GET_CALLBACK_TIMESPEC_GET_ERROR =
@@ -28,9 +28,9 @@ enum get_callback_errors_codes {
  *  - REGISTER_TASK_CODES - Error codes at the process of Getting the Task
  *
  */
-union union_task {
+union Union_task {
   Task TASK; /**< @link{Task} structure, the task with delay that is gone */
-  enum get_callback_errors_codes
+  enum Get_callback_errors_codes
       GET_CALLBACK_CODES; /**< Error codes at the process of Getting the Task
                            */
 };
@@ -39,7 +39,7 @@ union union_task {
  *  @details
  *  Structure for handling results of @link{get_callback} function execution.
  *  - type - (SUCCESS | ERROR_CODE)
- *  - get_callback_result - union @link{union union_task}, that is
+ *  - get_callback_result - union @link{union Union_task}, that is
  *    @type{Task} for TASK (SUCCESS, everything is OK) or
  *    one of error codes for ERROR_CODE
  *    i.e. (GET_CALLBACK_ARRAY_OF_TASKS_EMPTY | GET_CALLBACK_PENDING)
@@ -52,7 +52,7 @@ union union_task {
  *    task_id = 0; (first one)
  *    ***
  *    *** Usage ***
- *    PROMISE_TASK log_task = get_callback(void);
+ *    PROMISE_TASK log_task = get_callback();
  *    Task task = {};
  *
  *    switch (log_task.type) {
@@ -86,9 +86,9 @@ union union_task {
  *    task.callback(task.func_arg);
  *
  */
-typedef struct get_callback_result {
+typedef struct s_Get_callback_result {
   PROMISE_TYPE type;                    /**< SUCCESS | ERROR_CODE */
-  union union_task get_callback_result; /**< TASK | GET_CALLBACK_CODES */
+  union Union_task get_callback_result; /**< TASK | GET_CALLBACK_CODES */
 } PROMISE_TASK;
 
 #endif

@@ -4,7 +4,6 @@
 #include "./config.h"
 
 extern TASK_COUNTER task_count;
-extern TASK_COUNTER prepared_tasks_count;
 extern Task tasks_array[];
 
 #endif

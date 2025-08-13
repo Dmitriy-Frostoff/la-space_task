@@ -3,6 +3,7 @@
 
 #include "./config.h"
 
-int qsort_compare_func(const void *task_a, const void *task_b);
+void sort_tasks_descending_by_delay(Task arr[], size_t arr_size,
+                                    unsigned short elems_quantity_to_sort);
 
 #endif

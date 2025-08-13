@@ -7,7 +7,7 @@
 #include <string.h>
 #include <time.h>
 
-enum global_variables {
+enum Global_variables {
   MAX_TASK_QUANTITY = 50,  /**< size of array for Tasks instances */
   MIN_DELAY_FOR_SORT = 50, /**< min delay to run qsort in the Tasks array */
   RATIO_SEC_MS = 1000LL,   /**< for converting sec => ms */
@@ -48,7 +48,7 @@ typedef void (*task_callback)(unsigned short arg);
  *      Task.created_timespec.tv_nsec / RATIO_NANOSEC_MSEC)
  *
  */
-typedef struct task_template {
+typedef struct s_Task_template {
   task_callback callback;  /**< callback to call after delay time is gone */
   unsigned short func_arg; /**< argument to call @link{callback} with */
   unsigned short
@@ -66,7 +66,7 @@ typedef struct task_template {
  *  - ERROR_CODE - Errors occured
  *
  */
-typedef enum promise_common_type {
+typedef enum Promise_common_type {
   SUCCESS = 0,   /**< Everything OK, ID as result */
   ERROR_CODE = 1 /**< Errors occured */
 } PROMISE_TYPE;

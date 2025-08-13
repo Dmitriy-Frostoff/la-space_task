@@ -11,7 +11,7 @@
  *    timestamp via timespec_get() function with TIME_UTC base problems occured
  *
  */
-enum register_task_errors_codes {
+enum Register_task_errors_codes {
   REGISTER_TASK_ARRAY_OF_TASKS_FULL =
       1, /**< current task counter value is greater than Tasks array size */
   REGISTER_TASK_TIMESPEC_GET_ERROR =
@@ -27,9 +27,9 @@ enum register_task_errors_codes {
  *  - REGISTER_TASK_CODES - Error codes at the process of Task registration
  *
  */
-union union_id {
+union Union_id {
   unsigned short TASK_ID; /**< registered Task ID */
-  enum register_task_errors_codes
+  enum Register_task_errors_codes
       REGISTER_TASK_CODES; /**< Error codes at the process of Task registration
                             */
 };
@@ -38,7 +38,7 @@ union union_id {
  *  @details
  *  Structure for handling results of @link{register_task} function execution.
  *  - type - (SUCCESS | ERROR_CODE)
- *  - register_task_result - union @link{union union_id}, that is
+ *  - register_task_result - union @link{union Union_id}, that is
  *    @type{unsigned short} for TASK_ID (SUCCESS, everything is OK) or
  *    one of error codes for ERROR_CODE
  *    i.e. (REGISTER_TASK_ARRAY_OF_TASKS_FULL |
@@ -68,9 +68,9 @@ union union_id {
  *    }
  *
  */
-typedef struct register_task_result {
+typedef struct Register_task_result {
   PROMISE_TYPE type;                   /**< SUCCESS | ERROR_CODE */
-  union union_id register_task_result; /**< TASK_ID | REGISTER_TASK_CODES */
+  union Union_id register_task_result; /**< TASK_ID | REGISTER_TASK_CODES */
 } PROMISE_TASK_ID;
 
 #endif

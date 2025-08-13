@@ -1,6 +1,7 @@
 #include "./global_variables.h"
 #include "./register_task_config.h"
 #include "./utils.h"
+#include "config.h"
 
 /**
  *  @brief Register task in the @link{tasks_array[]} to delay its' usage at
@@ -15,10 +16,10 @@
  *  - implicit dependency on @type{Task}
  *  - implicit dependency on @type{struct timespec} of <time.h>
  *  - implicit dependency on global variable @link{MIN_DELAY_FOR_SORT}
- *  - implicit dependency on @callback{qsort_compare_func}
+ *  - implicit dependency on @callback{sort_tasks_descending_by_delay_func}
  *  - implicit dependency on @callback{timespec_get} function of <time.h>
  *  - under the hood uses @link{qsort} function from <stdlib.h> for sorting
- *    descending @link{tasks_array}
+ *    descending @link{tasks_array} via Task.delay(ms)
  *
  *  @note Returns promise like structure @link{PROMISE_TASK_ID}! Examine the
  *  example below how to handle it properly!
@@ -29,7 +30,7 @@
  *  @param {unsigned short} arg - argument to call with @link{func_to_call}
  *  @param {unsigned short} delay - delay time (ms). When it's gone user can
  *    call `func_to_call(arg)` or `Task task.callback(task.func_arg)` , where
- *    `task` is created via `register_task` function instance of @link{Task} and
+ *    `task` is created via `register_task` function instance of @type{Task} and
  *    nested to the @link{tasks_array}
  *
  *  @return {PROMISE_TASK_ID} - structure of complex type
@@ -126,7 +127,7 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
   // task delay
   if ((task_count > 1 && task.delay > MIN_DELAY_FOR_SORT) &&
       (tasks_array[task_count - 1].delay > tasks_array[task_count - 2].delay)) {
-    qsort(tasks_array, task_count, sizeof(Task), qsort_compare_func);
+    sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY, task_count);
   }
 
   return result_promise_task_id;
