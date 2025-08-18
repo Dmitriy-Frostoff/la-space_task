@@ -32,7 +32,7 @@
  *    @see{PROMISE_TASK} for details and examples below for clarification how
  *    to handle it
  *  @throw PROMISE_TASK.type = ERROR_CODE
- *    - PROMISE_TASK.get_callback_result.GET_CALLBACK_CODES =>
+ *    - PROMISE_TASK.get_callback_result.CODES_RESULT =>
  *      - GET_CALLBACK_ARRAY_OF_TASKS_EMPTY - current task counter value is 0
  *      - GET_CALLBACK_TIMESPEC_GET_ERROR - at the moment of getting current
  *        timestamp via timespec_get() function with TIME_UTC base problems
@@ -66,7 +66,7 @@
  *      break;
  *    case ERROR_CODE:
  *      printf("ERROR_CODE: %hd\n",
- *        log_task.get_callback_result.GET_CALLBACK_CODES);
+ *        log_task.get_callback_result.CODES_RESULT);
  *      OUTPUT: e.g. GET_CALLBACK_ARRAY_OF_TASKS_EMPTY
  *      or
  *      OUTPUT: e.g. GET_CALLBACK_PENDING
@@ -85,7 +85,7 @@ PROMISE_TASK get_callback(void) {
   // check that @link{tasks_array} is not empty
   if (task_count == 0) {
     return (PROMISE_TASK){.type = ERROR_CODE,
-                          .get_callback_result.GET_CALLBACK_CODES =
+                          .get_callback_result.CODES_RESULT =
                               GET_CALLBACK_ARRAY_OF_TASKS_EMPTY};
   }
 
@@ -112,7 +112,7 @@ PROMISE_TASK get_callback(void) {
   // set, 1 is base for @link{TIME_UTC})
   if (written_var_count == 0) {
     return (PROMISE_TASK){.type = ERROR_CODE,
-                          .get_callback_result.GET_CALLBACK_CODES =
+                          .get_callback_result.CODES_RESULT =
                               GET_CALLBACK_TIMESPEC_GET_ERROR};
   }
 
@@ -135,7 +135,7 @@ PROMISE_TASK get_callback(void) {
   //  Task.delay
   if (diff_timestamps_ms <= last_task.delay) {
     return (PROMISE_TASK){.type = ERROR_CODE,
-                          .get_callback_result.GET_CALLBACK_CODES =
+                          .get_callback_result.CODES_RESULT =
                               GET_CALLBACK_PENDING};
   }
 
@@ -151,7 +151,7 @@ PROMISE_TASK get_callback(void) {
     break;
   case ERROR_CODE:
     return (PROMISE_TASK){.type = ERROR_CODE,
-                          .get_callback_result.GET_CALLBACK_CODES =
+                          .get_callback_result.CODES_RESULT =
                               GET_CALLBACK_FREE_ID_ERROR};
   default:
     break;

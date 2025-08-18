@@ -41,7 +41,7 @@
  *    @see{PROMISE_TASK_ID} for details and examples below for clarification how
  *    to handle it
  *  @throw PROMISE_TASK_ID.type = ERROR_CODE
- *    - PROMISE_TASK_ID.register_task_result.REGISTER_TASK_CODES =>
+ *    - PROMISE_TASK_ID.register_task_result.CODES_RESULT =>
  *      REGISTER_TASK_ARRAY_OF_TASKS_FULL - no free space to add extra Task
  *      REGISTER_TASK_TIMESPEC_GET_ERROR - problems occured at
  *      @link{timespec_get}() function calling
@@ -58,7 +58,7 @@
  *      break;
  *    case ERROR_CODE:
  *      printf("ERROR_CODE: %hd\n",
- *        log_id.register_task_result.REGISTER_TASK_CODES);
+ *        log_id.register_task_result.CODES_RESULT);
  *      OUTPUT: e.g. REGISTER_TASK_ARRAY_OF_TASKS_FULL
  *      or
  *      OUTPUT: e.g. REGISTER_TASK_TIMESPEC_GET_ERROR
@@ -75,7 +75,7 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
   // prevent adding excessive task
   if (task_count >= MAX_TASK_QUANTITY) {
     return (PROMISE_TASK_ID){.type = ERROR_CODE,
-                             .register_task_result.REGISTER_TASK_CODES =
+                             .register_task_result.CODES_RESULT =
                                  REGISTER_TASK_ARRAY_OF_TASKS_FULL};
   }
 
@@ -94,7 +94,7 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
   // for @link{TIME_UTC})
   if (written_var_count == 0) {
     return (PROMISE_TASK_ID){.type = ERROR_CODE,
-                             .register_task_result.REGISTER_TASK_CODES =
+                             .register_task_result.CODES_RESULT =
                                  REGISTER_TASK_TIMESPEC_GET_ERROR};
   }
 
@@ -119,7 +119,7 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
     break;
   case ERROR_CODE:
     return (PROMISE_TASK_ID){.type = ERROR_CODE,
-                             .register_task_result.REGISTER_TASK_CODES =
+                             .register_task_result.CODES_RESULT =
                                  REGISTER_TASK_GET_ID_ERROR};
     break;
   default:

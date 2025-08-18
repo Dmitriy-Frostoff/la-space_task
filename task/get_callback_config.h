@@ -33,8 +33,8 @@ enum Get_callback_errors_codes {
 union Union_task {
   Task TASK; /**< @link{Task} structure, the task with delay that is gone */
   enum Get_callback_errors_codes
-      GET_CALLBACK_CODES; /**< Error codes at the process of Getting the Task
-                           */
+      CODES_RESULT; /**< Error codes at the process of Getting the Task
+                     */
 };
 
 /**
@@ -74,7 +74,7 @@ union Union_task {
  *      break;
  *    case ERROR_CODE:
  *      printf("ERROR_CODE: %hd\n",
- *        log_task.get_callback_result.GET_CALLBACK_CODES);
+ *        log_task.get_callback_result.CODES_RESULT);
  *      OUTPUT: e.g. GET_CALLBACK_ARRAY_OF_TASKS_EMPTY
  *      or
  *      OUTPUT: e.g. GET_CALLBACK_PENDING
@@ -93,7 +93,7 @@ union Union_task {
  */
 typedef struct s_Get_callback_result {
   PROMISE_TYPE type;                    /**< SUCCESS | ERROR_CODE */
-  union Union_task get_callback_result; /**< TASK | GET_CALLBACK_CODES */
+  union Union_task get_callback_result; /**< TASK | CODES_RESULT */
 } PROMISE_TASK;
 
 #endif

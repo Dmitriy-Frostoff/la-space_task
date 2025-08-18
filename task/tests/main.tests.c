@@ -42,7 +42,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("register_task(): ERROR_CODE: %hd\n",
-           log_id.register_task_result.REGISTER_TASK_CODES);
+           log_id.register_task_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr, "Error(%s() function at %d): ups...\n", __func__, __LINE__);
@@ -65,7 +65,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("register_task(): ERROR_CODE: %hd\n",
-           log_id.register_task_result.REGISTER_TASK_CODES);
+           log_id.register_task_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr, "Error(%s() function at %d): ups...\n", __func__, __LINE__);
@@ -83,7 +83,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("register_task(): ERROR_CODE: %hd\n",
-           log_id.register_task_result.REGISTER_TASK_CODES);
+           log_id.register_task_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr, "Error(%s() function at %d): ups...\n", __func__, __LINE__);
@@ -101,7 +101,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("register_task(): ERROR_CODE: %hd\n",
-           log_id.register_task_result.REGISTER_TASK_CODES);
+           log_id.register_task_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr, "Error(%s() function at %d): ups...\n", __func__, __LINE__);
@@ -122,7 +122,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("register_task(): ERROR_CODE: %hd\n",
-           log_id.register_task_result.REGISTER_TASK_CODES);
+           log_id.register_task_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr, "Error(%s() function at %d): ups...\n", __func__, __LINE__);
@@ -163,7 +163,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("register_task(): ERROR_CODE: %hd\n",
-           log_id.register_task_result.REGISTER_TASK_CODES);
+           log_id.register_task_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr, "Error(%s() function at %d): ups...\n", __func__, __LINE__);
@@ -187,7 +187,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("get_callback(): ERROR_CODE: %hd\n",
-           log_task.get_callback_result.GET_CALLBACK_CODES);
+           log_task.get_callback_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr,
@@ -210,7 +210,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("get_callback(): ERROR_CODE: %hd\n",
-           log_task.get_callback_result.GET_CALLBACK_CODES);
+           log_task.get_callback_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr,
@@ -232,7 +232,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("get_callback(): ERROR_CODE: %hd\n",
-           log_task.get_callback_result.GET_CALLBACK_CODES);
+           log_task.get_callback_result.CODES_RESULT);
     fprintf(stderr, "%s at %d\n", __func__, __LINE__);
     break;
   default:
@@ -257,7 +257,7 @@ int main(void) {
     break;
   case ERROR_CODE:
     printf("register_task(): ERROR_CODE: %hd\n",
-           log_id.register_task_result.REGISTER_TASK_CODES);
+           log_id.register_task_result.CODES_RESULT);
     break;
   default:
     fprintf(stderr, "Error(%s() function at %d): ups...\n", __func__, __LINE__);
@@ -324,7 +324,6 @@ int main(void) {
   case ERROR_CODE:
     printf("log_change_task_delay(): ERROR_CODE: %hd\n",
            log_change_task_delay.CODES_RESULT);
-    fprintf(stderr, "Error(%s() function at %d): ups...\n", __func__, __LINE__);
     break;
   default:
     fprintf(stderr,

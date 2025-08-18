@@ -27,14 +27,14 @@ enum Register_task_errors_codes {
  *  Union for handling results of @link{register_task} function execution.
  *  Possible values @note only one of is possible!:
  *  - TASK_ID - registered Task ID
- *  - REGISTER_TASK_CODES - Error codes at the process of Task registration
+ *  - CODES_RESULT - Error codes at the process of Task registration
  *
  */
 union Union_id {
   unsigned short TASK_ID; /**< registered Task ID */
   enum Register_task_errors_codes
-      REGISTER_TASK_CODES; /**< Error codes at the process of Task registration
-                            */
+      CODES_RESULT; /**< Error codes at the process of Task registration
+                     */
 };
 
 /**
@@ -59,7 +59,7 @@ union Union_id {
  *      break;
  *    case ERROR_CODE:
  *      printf("ERROR_CODE: %hd\n",
- *        log_id.register_task_result.REGISTER_TASK_CODES);
+ *        log_id.register_task_result.CODES_RESULT);
  *      OUTPUT: e.g. REGISTER_TASK_ARRAY_OF_TASKS_FULL
  *      or
  *      OUTPUT: e.g. REGISTER_TASK_TIMESPEC_GET_ERROR
@@ -75,7 +75,7 @@ union Union_id {
  */
 typedef struct Register_task_result {
   PROMISE_TYPE type;                   /**< SUCCESS | ERROR_CODE */
-  union Union_id register_task_result; /**< TASK_ID | REGISTER_TASK_CODES */
+  union Union_id register_task_result; /**< TASK_ID | CODES_RESULT */
 } PROMISE_TASK_ID;
 
 #endif
