@@ -1,7 +1,6 @@
 #include "./global_variables.h"
 #include "./register_task_config.h"
 #include "./utils.h"
-#include "config.h"
 
 /**
  *  @brief Register task in the @link{tasks_array[]} to delay its' usage at
@@ -11,13 +10,18 @@
  *  @note ! Impure function !
  *  - mutates the outer @link{task_count}
  *  - mutates the outer @link{tasks_array}
+ *  - mutates the outer (encapsulated) @link{id_storage_array}
+ *  - mutates the outer (encapsulated) @link{is_first_call}
+ *  - mutates the outer (encapsulated) @link{ptr_free_elem}
  *  - implicit dependency on @type{PROMISE_TASK_ID}
  *  - implicit dependency on @type{task_callback}
  *  - implicit dependency on @type{Task}
  *  - implicit dependency on @type{struct timespec} of <time.h>
+ *  - implicit dependency on @type{ID_LIST_ELEM}
+ *  - implicit dependency on @callback{get_id}
  *  - implicit dependency on global variable @link{MIN_DELAY_FOR_SORT}
- *  - implicit dependency on @callback{sort_tasks_descending_by_delay_func}
  *  - implicit dependency on @callback{timespec_get} function of <time.h>
+ *  - implicit dependency on @callback{sort_tasks_descending_by_delay_func}
  *  - under the hood uses @link{qsort} function from <stdlib.h> for sorting
  *    descending @link{tasks_array} via Task.delay(ms)
  *
@@ -107,7 +111,20 @@ PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
   task.delay = delay;
 
   // set up the @link{task.id}
-  task.id = task_count;
+  PROMISE_ID_VALUE log_id_value = get_id();
+
+  switch (log_id_value.type) {
+  case SUCCESS:
+    task.id = log_id_value.handle_id_result.ID_VALUE;
+    break;
+  case ERROR_CODE:
+    return (PROMISE_TASK_ID){.type = ERROR_CODE,
+                             .register_task_result.REGISTER_TASK_CODES =
+                                 REGISTER_TASK_GET_ID_ERROR};
+    break;
+  default:
+    break;
+  }
 
   // nest the task instance to the @kink{tasks_array}
   tasks_array[task_count] = task;

@@ -9,6 +9,7 @@
  *    than Tasks array size
  *  - REGISTER_TASK_TIMESPEC_GET_ERROR - at the moment of getting current
  *    timestamp via timespec_get() function with TIME_UTC base problems occured
+ *  - REGISTER_TASK_GET_ID_ERROR - error at the process of getting free id
  *
  */
 enum Register_task_errors_codes {
@@ -17,6 +18,8 @@ enum Register_task_errors_codes {
   REGISTER_TASK_TIMESPEC_GET_ERROR =
       2, /**< at the moment of getting current timestamp via
           *    timespec_get() function with TIME_UTC base problems occured */
+  REGISTER_TASK_GET_ID_ERROR =
+      3, /**< error at the process of getting free id */
 };
 
 /**
@@ -42,7 +45,7 @@ union Union_id {
  *    @type{unsigned short} for TASK_ID (SUCCESS, everything is OK) or
  *    one of error codes for ERROR_CODE
  *    i.e. (REGISTER_TASK_ARRAY_OF_TASKS_FULL |
- * REGISTER_TASK_TIMESPEC_GET_ERROR)
+ *    REGISTER_TASK_TIMESPEC_GET_ERROR | REGISTER_TASK_GET_ID_ERROR)
  *
  *  @example
  *    PROMISE_TASK_ID log_id = register_task(some_callback, 400, 400);
@@ -60,6 +63,8 @@ union Union_id {
  *      OUTPUT: e.g. REGISTER_TASK_ARRAY_OF_TASKS_FULL
  *      or
  *      OUTPUT: e.g. REGISTER_TASK_TIMESPEC_GET_ERROR
+ *      or
+ *      OUTPUT: e.g. REGISTER_TASK_GET_ID_ERROR
  *      break;
  *    default:
  *      fprintf(stderr, "Error(%s() function at %d): ups... Unknown

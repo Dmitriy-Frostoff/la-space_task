@@ -129,9 +129,24 @@ int main(void) {
     break;
   }
 
-  // manual zero the Task
+  // manual zero the Task (do not do that anymore! use proper methods instead!)
   tasks_array[0] = (Task){0};
   task_count -= 1;
+  PROMISE_ID_VALUE log_id_value = free_id(task_id);
+
+  switch (log_id_value.type) {
+  case SUCCESS:
+    task_id -= 1;
+    printf("free_id(): id value was freed successfully\n");
+    break;
+  case ERROR_CODE:
+    printf("ERROR_CODE: %hd\n", log_id_value.handle_id_result.CODES_RESULT);
+  default:
+    fprintf(stderr,
+            "Error(%s() function at %d): ups... Unknown log_id_value.type\n",
+            __func__, __LINE__);
+    break;
+  }
 
   // @note ! Can cause "segmentation fault" error! Check
   // @link{MAX_TASK_QUANTITY} and @param{elems_quantity_to_sort} (currently = 3)

@@ -1,6 +1,7 @@
 #include "./config.h"
 #include "./get_callback_config.h"
 #include "./global_variables.h"
+#include "./utils.h"
 
 /**
  *  @brief Get the sructure @link{PROMISE_TASK} with the last task (study the
@@ -10,9 +11,14 @@
  *  @note ! Impure function !
  *  - mutates the outer @link{task_count}
  *  - mutates the outer @link{tasks_array}
+ *  - mutates the outer (encapsulated) @link{id_storage_array}
+ *  - mutates the outer (encapsulated) @link{is_first_call}
+ *  - mutates the outer (encapsulated) @link{ptr_free_elem}
  *  - implicit dependency on @type{PROMISE_TASK}
  *  - implicit dependency on @type{Task}
  *  - implicit dependency on @type{struct timespec} of <time.h>
+ *  - implicit dependency on @type{ID_LIST_ELEM}
+ *  - implicit dependency on @callback{free_id}
  *  - implicit dependency on @callback{timespec_get} function of <time.h>
  *
  *  @note Returns promise like structure @link{PROMISE_TASK}! Examine the
@@ -136,6 +142,20 @@ PROMISE_TASK get_callback(void) {
   // update @link{result_promise_task}
   result_promise_task =
       (PROMISE_TASK){.type = SUCCESS, .get_callback_result.TASK = last_task};
+
+  // free the id
+  PROMISE_ID_VALUE log_id_value = free_id(tasks_array[task_count - 1].id);
+
+  switch (log_id_value.type) {
+  case SUCCESS:
+    break;
+  case ERROR_CODE:
+    return (PROMISE_TASK){.type = ERROR_CODE,
+                          .get_callback_result.GET_CALLBACK_CODES =
+                              GET_CALLBACK_FREE_ID_ERROR};
+  default:
+    break;
+  }
 
   // remove the ready task from the @link{tasks_array} (i.e. empty last task),
   // decrease quantity of tasks and return the ready task

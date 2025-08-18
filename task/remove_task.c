@@ -8,9 +8,14 @@
  *
  *  @note ! Impure function !
  *  - mutates the outer @link{tasks_array}
+ *  - mutates the outer (encapsulated) @link{id_storage_array}
+ *  - mutates the outer (encapsulated) @link{is_first_call}
+ *  - mutates the outer (encapsulated) @link{ptr_free_elem}
  *  - implicit dependency on @type{TASK_COUNTER}
  *  - implicit dependency on @type{PROMISE_REMOVE_TASK}
  *  - implicit dependency on @type{Task}
+ *  - implicit dependency on @type{ID_LIST_ELEM}
+ *  - implicit dependency on @callback{free_id}
  *  - implicit dependency on @callback{sort_tasks_descending_by_delay_func}
  *  - under the hood uses @link{qsort} function from <stdlib.h> for sorting
  *    descending @link{tasks_array} via Task.delay(ms)
@@ -97,6 +102,19 @@ PROMISE_REMOVE_TASK remove_task(TASK_COUNTER id) {
       // remove the Task => swap Task to (Task){0}
       tasks_array[i] = (Task){0};
 
+      // free the id
+      PROMISE_ID_VALUE log_id_value = free_id(id);
+
+      switch (log_id_value.type) {
+      case SUCCESS:
+        break;
+      case ERROR_CODE:
+        return (PROMISE_REMOVE_TASK){.type = ERROR_CODE,
+                                     .CODES_RESULT = REMOVE_TASK_FREE_ID_ERROR};
+      default:
+        break;
+      }
+
       // sort @link{tasks_array} only if:
       // - more than one task in it
       if (task_count > 1) {
@@ -116,6 +134,19 @@ PROMISE_REMOVE_TASK remove_task(TASK_COUNTER id) {
     if (tasks_array[task_count - 1 - i].id == id) {
       // remove the Task => swap Task to (Task){0}
       tasks_array[task_count - 1 - i] = (Task){0};
+
+      // free the id
+      PROMISE_ID_VALUE log_id_value = free_id(id);
+
+      switch (log_id_value.type) {
+      case SUCCESS:
+        break;
+      case ERROR_CODE:
+        return (PROMISE_REMOVE_TASK){.type = ERROR_CODE,
+                                     .CODES_RESULT = REMOVE_TASK_FREE_ID_ERROR};
+      default:
+        break;
+      }
 
       // sort @link{tasks_array} only if:
       // - more than one task in it

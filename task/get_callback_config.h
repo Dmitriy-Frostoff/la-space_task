@@ -9,6 +9,7 @@
  *  - GET_CALLBACK_TIMESPEC_GET_ERROR - at the moment of getting current
  *    timestamp via timespec_get() function with TIME_UTC base problems occured
  *  - GET_CALLBACK_PENDING - the least task's delay is not gone yet
+ *  - GET_CALLBACK_FREE_ID_ERROR - error at the process of freeing the id
  *
  */
 enum Get_callback_errors_codes {
@@ -18,6 +19,7 @@ enum Get_callback_errors_codes {
       2,                    /**< at the moment of getting current timestamp via
                              *    timespec_get() function with TIME_UTC base problems occured */
   GET_CALLBACK_PENDING = 3, /**< the least task's delay is not gone yet */
+  GET_CALLBACK_FREE_ID_ERROR = 4, /**< error at the process of freeing the id */
 };
 
 /**
@@ -42,7 +44,8 @@ union Union_task {
  *  - get_callback_result - union @link{union Union_task}, that is
  *    @type{Task} for TASK (SUCCESS, everything is OK) or
  *    one of error codes for ERROR_CODE
- *    i.e. (GET_CALLBACK_ARRAY_OF_TASKS_EMPTY | GET_CALLBACK_PENDING)
+ *    i.e. (GET_CALLBACK_ARRAY_OF_TASKS_EMPTY | GET_CALLBACK_PENDING |
+ *    GET_CALLBACK_FREE_ID_ERROR)
  *
  *  @example
  *    *** Predefined context ***
@@ -75,6 +78,8 @@ union Union_task {
  *      OUTPUT: e.g. GET_CALLBACK_ARRAY_OF_TASKS_EMPTY
  *      or
  *      OUTPUT: e.g. GET_CALLBACK_PENDING
+ *      or
+ *      OUTPUT: e.g. GET_CALLBACK_FREE_ID_ERROR
  *      break;
  *    default:
  *      fprintf(stderr, "Error(%s() function at %d): ups... Unknown
