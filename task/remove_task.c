@@ -1,12 +1,19 @@
-#include "./config.h"
-#include "./global_variables.h"
-#include "./remove_task_config.h"
-#include "./utils.h"
+#include "./arguments.h"
+#include "./module_run_tasks_after_delay.h"
+
+extern bool is_remove_task;
 
 /**
  *  @brief Remove the task via valid id from @link{tasks_array}
  *
+ *  @details Controller like function to get arguments and skip them further to
+ *  the correspondent handler function via @link{handle_events_tasks}.
+ *
  *  @note ! Impure function !
+ *  - mutates the outer global variable @link{is_remove_task}
+ *  - implicit dependency on @callback{arguments_set_id_remove}
+ *  - implicit dependency on @callback{handle_events_tasks}
+ *
  *  - mutates the outer @link{tasks_array}
  *  - mutates the outer (encapsulated) @link{id_storage_array}
  *  - mutates the outer (encapsulated) @link{is_first_call}
@@ -76,96 +83,12 @@
  *
  */
 PROMISE_REMOVE_TASK remove_task(TASK_COUNTER id) {
-  // check that @link{tasks_array} is not empty
-  if (task_count == 0) {
-    return (PROMISE_REMOVE_TASK){
-        .type = ERROR_CODE, .CODES_RESULT = REMOVE_TASK_ARRAY_OF_TASKS_EMPTY};
-  }
+  // set up the flag
+  is_remove_task = true;
 
-  // check, that @link{id} is in range [0; task_count - 1]
-  // @note task_count - 1 ? => task id ( @link{Task tasks_array[]} index) ==
-  // task_count - 1
-  // id @type{unsigned short} may not be negative! so -1 => 65536 - 1 = 65535
-  //  where 2 ** 16 (i.e. 2 * 8 i.e. 2 bytes = 16) = 65536
-  if (id >= task_count) {
-    return (PROMISE_REMOVE_TASK){.type = ERROR_CODE,
-                                 .CODES_RESULT =
-                                     REMOVE_TASK_TASK_ID_IS_NOT_DETERMINED};
-  }
+  // update arguments
+  arguments_set_id_remove(id);
 
-  // get the task over @link{id} and remove the task (make it 0 zero struct
-  //  i.e. to (Task){0} )
-  for (TASK_COUNTER i = 0; i < task_count; i += 1) {
-    // use bidirectional search
-    // search from the beginning
-    if (tasks_array[i].id == id) {
-      // remove the Task => swap Task to (Task){0}
-      tasks_array[i] = (Task){0};
-
-      // free the id
-      PROMISE_ID_VALUE log_id_value = free_id(id);
-
-      switch (log_id_value.type) {
-      case SUCCESS:
-        break;
-      case ERROR_CODE:
-        return (PROMISE_REMOVE_TASK){.type = ERROR_CODE,
-                                     .CODES_RESULT = REMOVE_TASK_FREE_ID_ERROR};
-      default:
-        break;
-      }
-
-      // sort @link{tasks_array} only if:
-      // - more than one task in it
-      if (task_count > 1) {
-        // sort @link{tasks_array} descending via Task.delay (ms)
-        sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY,
-                                       task_count);
-      }
-
-      // update @link{task_count}
-      task_count -= 1;
-
-      return (PROMISE_REMOVE_TASK){
-          .type = SUCCESS, .CODES_RESULT = REMOVE_TASK_DONE_SUCCESSFULLY};
-    }
-
-    // search from the end
-    if (tasks_array[task_count - 1 - i].id == id) {
-      // remove the Task => swap Task to (Task){0}
-      tasks_array[task_count - 1 - i] = (Task){0};
-
-      // free the id
-      PROMISE_ID_VALUE log_id_value = free_id(id);
-
-      switch (log_id_value.type) {
-      case SUCCESS:
-        break;
-      case ERROR_CODE:
-        return (PROMISE_REMOVE_TASK){.type = ERROR_CODE,
-                                     .CODES_RESULT = REMOVE_TASK_FREE_ID_ERROR};
-      default:
-        break;
-      }
-
-      // sort @link{tasks_array} only if:
-      // - more than one task in it
-      if (task_count > 1) {
-        // sort @link{tasks_array} descending via Task.delay (ms)
-        sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY,
-                                       task_count);
-      }
-
-      // update @link{task_count}
-      task_count -= 1;
-
-      return (PROMISE_REMOVE_TASK){
-          .type = SUCCESS, .CODES_RESULT = REMOVE_TASK_DONE_SUCCESSFULLY};
-    }
-  }
-
-  // handle case when no match over @link{id} happened
-  return (PROMISE_REMOVE_TASK){.type = ERROR_CODE,
-                               .CODES_RESULT =
-                                   REMOVE_TASK_TASK_ID_IS_NOT_DETERMINED};
+  // handle the events
+  return handle_events_tasks().results.result_remove_task;
 }

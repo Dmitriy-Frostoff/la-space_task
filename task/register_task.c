@@ -1,13 +1,23 @@
-#include "./global_variables.h"
-#include "./register_task_config.h"
-#include "./utils.h"
+#include "./arguments.h"
+#include "./module_run_tasks_after_delay.h"
+
+extern bool is_register_task;
 
 /**
  *  @brief Register task in the @link{tasks_array[]} to delay its' usage at
  *  @link{delay} ms and get the strucure @link{PROMISE_TASK_ID} for saving
  *  registered task's id
  *
+ *  @details Controller like function to get arguments and skip them further to
+ *  the correspondent handler function via @link{handle_events_tasks}.
+ *
  *  @note ! Impure function !
+ *  - mutates the outer global variable @link{is_register_task}
+ *  - implicit dependency on @callback{arguments_set_callback}
+ *  - implicit dependency on @callback{arguments_set_func_arg}
+ *  - implicit dependency on @callback{arguments_set_delay}
+ *  - implicit dependency on @callback{handle_events_tasks}
+ *
  *  - mutates the outer @link{task_count}
  *  - mutates the outer @link{tasks_array}
  *  - mutates the outer (encapsulated) @link{id_storage_array}
@@ -34,8 +44,8 @@
  *  @param {unsigned short} arg - argument to call with @link{func_to_call}
  *  @param {unsigned short} delay - delay time (ms). When it's gone user can
  *    call `func_to_call(arg)` or `Task task.callback(task.func_arg)` , where
- *    `task` is created via `register_task` function instance of @type{Task} and
- *    nested to the @link{tasks_array}
+ *    `task` is created via `register_task` function instance of
+ *    @type{Task} and nested to the @link{tasks_array}
  *
  *  @return {PROMISE_TASK_ID} - structure of complex type
  *    @see{PROMISE_TASK_ID} for details and examples below for clarification how
@@ -72,80 +82,14 @@
  */
 PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
                               unsigned short delay) {
-  // prevent adding excessive task
-  if (task_count >= MAX_TASK_QUANTITY) {
-    return (PROMISE_TASK_ID){.type = ERROR_CODE,
-                             .register_task_result.CODES_RESULT =
-                                 REGISTER_TASK_ARRAY_OF_TASKS_FULL};
-  }
+  // set up the flag
+  is_register_task = true;
 
-  // create pure @link{Task} instance
-  Task task = {};
+  // update arguments
+  arguments_set_callback(func_to_call);
+  arguments_set_func_arg(arg);
+  arguments_set_delay(delay);
 
-  // create pure @link{PROMISE_TASK_ID} instance
-  // (assign to it further)
-  PROMISE_TASK_ID result_promise_task_id = {};
-
-  // set up current timestamp
-  struct timespec ts = {};
-  int written_var_count = timespec_get(&ts, TIME_UTC);
-
-  // ts.tv_sec and ts.tv_nsec are set ? => 1(OK) (two fields are set, 1 is base
-  // for @link{TIME_UTC})
-  if (written_var_count == 0) {
-    return (PROMISE_TASK_ID){.type = ERROR_CODE,
-                             .register_task_result.CODES_RESULT =
-                                 REGISTER_TASK_TIMESPEC_GET_ERROR};
-  }
-
-  // set up the @link{task.created_timespec}
-  task.created_timespec = ts;
-
-  // set up the @link{callback}
-  task.callback = func_to_call;
-
-  // set up the @link{task.func_arg}
-  task.func_arg = arg;
-
-  // set up the @link{task.delay}
-  task.delay = delay;
-
-  // set up the @link{task.id}
-  PROMISE_ID_VALUE log_id_value = get_id();
-
-  switch (log_id_value.type) {
-  case SUCCESS:
-    task.id = log_id_value.handle_id_result.ID_VALUE;
-    break;
-  case ERROR_CODE:
-    return (PROMISE_TASK_ID){.type = ERROR_CODE,
-                             .register_task_result.CODES_RESULT =
-                                 REGISTER_TASK_GET_ID_ERROR};
-    break;
-  default:
-    break;
-  }
-
-  // nest the task instance to the @kink{tasks_array}
-  tasks_array[task_count] = task;
-
-  // update @link{result_promise_task_id}
-  result_promise_task_id = (PROMISE_TASK_ID){
-      .type = SUCCESS, .register_task_result.TASK_ID = task_count};
-
-  // update @link{task_count} counter
-  task_count += 1;
-
-  // sort tasks in the @link{tasks_array} descending (over the @link{Task.delay}
-  // field value) i.e. the least delay has greater index
-  // @note if @link{tasks_array} contains at least two tasks and the added
-  // task's delay is greater than min delay for sort
-  // and the added task's delay is greater than previous @link{tasks_array} 's
-  // task delay
-  if ((task_count > 1 && task.delay > MIN_DELAY_FOR_SORT) &&
-      (tasks_array[task_count - 1].delay > tasks_array[task_count - 2].delay)) {
-    sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY, task_count);
-  }
-
-  return result_promise_task_id;
+  // handle the events
+  return handle_events_tasks().results.result_register_task;
 }

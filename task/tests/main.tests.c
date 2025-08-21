@@ -15,7 +15,6 @@
 #include "./module_run_tasks_after_delay.h"
 
 #include "./utils.h"
-#include <unistd.h>
 
 int main(void) {
   /** !Test data! */

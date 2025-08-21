@@ -4,9 +4,11 @@
 #include "./change_task_delay_config.h"
 #include "./config.h"
 #include "./get_callback_config.h"
+#include "./handle_events_tasks_config.h"
 #include "./register_task_config.h"
 #include "./remove_task_config.h"
 
+PROMISE_HANDLE_EVENTS_TASKS handle_events_tasks(void);
 PROMISE_TASK_ID register_task(task_callback func_to_call, unsigned short arg,
                               unsigned short delay);
 PROMISE_TASK get_callback(void);

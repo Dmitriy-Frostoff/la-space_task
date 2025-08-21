@@ -6,13 +6,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 enum Global_variables {
   MAX_TASK_QUANTITY = 50,  /**< size of array for Tasks instances */
   MIN_DELAY_FOR_SORT = 50, /**< min delay to run qsort in the Tasks array */
-  RATIO_SEC_MS = 1000LL,   /**< for converting sec => ms */
-  RATIO_NANOSEC_MSEC = 1000000LL,  /**< for converting nsec => ms */
-  RATIO_SEC_NANOSEC = 1000000000LL /**< for converting sec => ns */
+  RATIO_SEC_MS = 1'000LL,  /**< for converting sec => ms */
+  RATIO_NANOSEC_MSEC = 1'000'000LL,   /**< for converting nsec => ms */
+  RATIO_SEC_NANOSEC = 1'000'000'000LL /**< for converting sec => ns */
 };
 
 /**

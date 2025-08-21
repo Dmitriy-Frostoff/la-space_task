@@ -1,12 +1,20 @@
-#include "./change_task_delay_config.h"
-#include "./config.h"
-#include "./global_variables.h"
-#include "./utils.h"
+#include "./arguments.h"
+#include "./module_run_tasks_after_delay.h"
+
+extern bool is_change_task_delay;
 
 /**
  *  @brief Modify the delay value (ms) of the task from @link{tasks_array}
  *
+ *  @details Controller like function to get arguments and skip them further to
+ *  the correspondent handler function via @link{handle_events_tasks}.
+ *
  *  @note ! Impure function !
+ *  - mutates the outer global variable @link{is_change_task_delay}
+ *  - implicit dependency on @callback{arguments_set_id}
+ *  - implicit dependency on @callback{arguments_set_patch_delay}
+ *  - implicit dependency on @callback{handle_events_tasks}
+ *
  *  - mutates the outer Task in the @link{tasks_array}
  *  - implicit dependency on @type{TASK_COUNTER}
  *  - implicit dependency on @type{PROMISE_CHANGE_TASK_DELAY}
@@ -48,8 +56,8 @@
  *    task_id = 0; (first one)
  *    ***
  *    *** Usage ***
- *    PROMISE_CHANGE_TASK_DELAY log_change_task_delay = change_task_delay(0,
- *      1600);
+ *    PROMISE_CHANGE_TASK_DELAY log_change_task_delay =
+ *      change_task_delay(0, 1600);
  *
  *    switch (log_change_task_delay.type) {
  *    case SUCCESS:
@@ -73,85 +81,13 @@
  */
 PROMISE_CHANGE_TASK_DELAY change_task_delay(TASK_COUNTER id,
                                             unsigned short new_delay) {
-  // check that @link{tasks_array} is not empty
-  if (task_count == 0) {
-    return (PROMISE_CHANGE_TASK_DELAY){
-        .type = ERROR_CODE,
-        .CODES_RESULT = CHANGE_TASK_DELAY_ARRAY_OF_TASKS_EMPTY};
-  }
+  // set up the flag
+  is_change_task_delay = true;
 
-  // check, that @link{id} is in range [0; task_count - 1]
-  // @note task_count - 1 ? => task id ( @link{Task tasks_array[]} index) ==
-  // task_count - 1
-  // id @type{unsigned short} may not be negative! so -1 => 65536 - 1 = 65535
-  //  where 2 ** 16 (i.e. 2 * 8 i.e. 2 bytes = 16) = 65536
-  if (id >= task_count) {
-    return (PROMISE_CHANGE_TASK_DELAY){
-        .type = ERROR_CODE,
-        .CODES_RESULT = CHANGE_TASK_DELAY_TASK_ID_IS_NOT_DETERMINED};
-  }
+  // update arguments
+  arguments_set_id(id);
+  arguments_set_patch_delay(new_delay);
 
-  // set up current timestamp
-  struct timespec ts = {};
-  int written_var_count = timespec_get(&ts, TIME_UTC);
-
-  // ts.tv_sec and ts.tv_nsec are set ? => 1(OK) (two fields are set, 1 is base
-  // for @link{TIME_UTC})
-  if (written_var_count == 0) {
-    return (PROMISE_CHANGE_TASK_DELAY){
-        .type = ERROR_CODE,
-        .CODES_RESULT = CHANGE_TASK_DELAY_TIMESPEC_GET_ERROR};
-  }
-
-  // get the task over @link{id} and change the task
-  for (TASK_COUNTER i = 0; i < task_count; i += 1) {
-    // use bidirectional search
-    // search from the beginning
-    if (tasks_array[i].id == id) {
-      // update the task's fields
-      tasks_array[i].created_timespec = ts;
-      tasks_array[i].delay = new_delay;
-
-      // sort @link{tasks_array} only if:
-      // - more than one task in it
-      // - current task index > 0 and
-      //   current task's delay > previous task's delay
-      if ((task_count > 1) &&
-          ((i > 0) && (tasks_array[i].delay > tasks_array[i - 1].delay))) {
-        // sort @link{tasks_array} descending via Task.delay (ms)
-        sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY,
-                                       task_count);
-      }
-
-      return (PROMISE_CHANGE_TASK_DELAY){
-          .type = SUCCESS, .CODES_RESULT = CHANGE_TASK_DELAY_DONE_SUCCESSFULLY};
-    }
-
-    // search from the end
-    if (tasks_array[task_count - 1 - i].id == id) {
-      // update the task's fields
-      tasks_array[task_count - 1 - i].created_timespec = ts;
-      tasks_array[task_count - 1 - i].delay = new_delay;
-
-      // sort @link{tasks_array} only if:
-      // - more than one task in it
-      // - current task index > 0 and
-      //   current task's delay > previous task's delay
-      if ((task_count > 1) && ((task_count - 1 - i > 0) &&
-                               (tasks_array[task_count - 1 - i].delay >
-                                tasks_array[task_count - 2 - i].delay))) {
-        // sort @link{tasks_array} descending via Task.delay (ms)
-        sort_tasks_descending_by_delay(tasks_array, MAX_TASK_QUANTITY,
-                                       task_count);
-      }
-
-      return (PROMISE_CHANGE_TASK_DELAY){
-          .type = SUCCESS, .CODES_RESULT = CHANGE_TASK_DELAY_DONE_SUCCESSFULLY};
-    }
-  }
-
-  // handle case when no match over @link{id} happened
-  return (PROMISE_CHANGE_TASK_DELAY){
-      .type = ERROR_CODE,
-      .CODES_RESULT = CHANGE_TASK_DELAY_TASK_ID_IS_NOT_DETERMINED};
+  // handle the events
+  return handle_events_tasks().results.result_change_task_delay;
 }

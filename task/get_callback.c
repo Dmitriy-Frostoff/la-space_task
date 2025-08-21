@@ -1,14 +1,19 @@
-#include "./config.h"
-#include "./get_callback_config.h"
-#include "./global_variables.h"
-#include "./utils.h"
+#include "./module_run_tasks_after_delay.h"
+
+extern bool is_get_callback;
 
 /**
  *  @brief Get the sructure @link{PROMISE_TASK} with the last task (study the
  *  example for details!) from the @link{tasks_array[]} to call it's callback
  *  with the saved argument.
  *
+ *  @details Controller like function to get arguments and skip them further to
+ *  the correspondent handler function via @link{handle_events_tasks}.
+ *
  *  @note ! Impure function !
+ *  - mutates the outer global variable @link{is_get_callback}
+ *  - implicit dependency on @callback{handle_events_tasks}
+ *
  *  - mutates the outer @link{task_count}
  *  - mutates the outer @link{tasks_array}
  *  - mutates the outer (encapsulated) @link{id_storage_array}
@@ -82,85 +87,9 @@
  *
  */
 PROMISE_TASK get_callback(void) {
-  // check that @link{tasks_array} is not empty
-  if (task_count == 0) {
-    return (PROMISE_TASK){.type = ERROR_CODE,
-                          .get_callback_result.CODES_RESULT =
-                              GET_CALLBACK_ARRAY_OF_TASKS_EMPTY};
-  }
+  // set up the flag
+  is_get_callback = true;
 
-  // set up
-  struct timespec current_ts = {};
-  time_t current_timestamp_ms = 0;
-  struct timespec task_created_timespec = {};
-  time_t task_timestamp_ms = 0;
-  unsigned short diff_timestamps_ms = 0;
-
-  /** the task in the @link{tasks_array} with
-    the least delay(ms)
-    @note task_count - 1 ? => task_count - 1 == last task index in the
-    @link{tasks_array} */
-  Task last_task = tasks_array[task_count - 1];
-
-  // create pure instance of @link{PROMISE_TASK} as a result value
-  // (assign to it further)
-  PROMISE_TASK result_promise_task = {};
-
-  int written_var_count = timespec_get(&current_ts, TIME_UTC);
-
-  // current_ts.tv_sec and current_ts.tv_nsec are set ? => 1(OK) (two fields are
-  // set, 1 is base for @link{TIME_UTC})
-  if (written_var_count == 0) {
-    return (PROMISE_TASK){.type = ERROR_CODE,
-                          .get_callback_result.CODES_RESULT =
-                              GET_CALLBACK_TIMESPEC_GET_ERROR};
-  }
-
-  // count timestamps(ms)
-  // @note with precision's loss (nsec => ms due to delay(ms))
-  current_timestamp_ms =
-      (time_t)(round(current_ts.tv_sec * RATIO_SEC_MS +
-                     current_ts.tv_nsec / RATIO_NANOSEC_MSEC));
-
-  task_created_timespec = (last_task).created_timespec;
-  task_timestamp_ms =
-      (time_t)(round(task_created_timespec.tv_sec * RATIO_SEC_MS +
-                     task_created_timespec.tv_nsec / RATIO_NANOSEC_MSEC));
-
-  diff_timestamps_ms =
-      (unsigned short)(current_timestamp_ms - task_timestamp_ms);
-
-  // check that
-  // (current timestamp(count from current_ts) - Task.created_timespec) >
-  //  Task.delay
-  if (diff_timestamps_ms <= last_task.delay) {
-    return (PROMISE_TASK){.type = ERROR_CODE,
-                          .get_callback_result.CODES_RESULT =
-                              GET_CALLBACK_PENDING};
-  }
-
-  // update @link{result_promise_task}
-  result_promise_task =
-      (PROMISE_TASK){.type = SUCCESS, .get_callback_result.TASK = last_task};
-
-  // free the id
-  PROMISE_ID_VALUE log_id_value = free_id(tasks_array[task_count - 1].id);
-
-  switch (log_id_value.type) {
-  case SUCCESS:
-    break;
-  case ERROR_CODE:
-    return (PROMISE_TASK){.type = ERROR_CODE,
-                          .get_callback_result.CODES_RESULT =
-                              GET_CALLBACK_FREE_ID_ERROR};
-  default:
-    break;
-  }
-
-  // remove the ready task from the @link{tasks_array} (i.e. empty last task),
-  // decrease quantity of tasks and return the ready task
-  tasks_array[task_count - 1] = (Task){0};
-  task_count -= 1;
-
-  return result_promise_task;
+  // handle the events
+  return handle_events_tasks().results.result_get_callback;
 }
