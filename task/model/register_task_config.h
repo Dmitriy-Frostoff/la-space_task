@@ -1,7 +1,7 @@
 #ifndef REGISTER_TASK_CONFIG_H
 #define REGISTER_TASK_CONFIG_H
 
-#include "./config.h"
+#include "../environment/config.h"
 
 /**
  *  @details

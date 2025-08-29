@@ -11,10 +11,10 @@
  *
  */
 
-#include "./global_variables.h"
+#include "./environment/global_variables.h"
 #include "./module_run_tasks_after_delay.h"
 
-#include "./utils.h"
+#include "./utilities/utils.h"
 
 int main(void) {
   /** !Test data! */

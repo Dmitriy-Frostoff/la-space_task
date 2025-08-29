@@ -1,6 +1,6 @@
-#include "./global_variables.h"
+#include "../environment/global_variables.h"
+#include "../utilities/utils.h"
 #include "./register_task_config.h"
-#include "./utils.h"
 
 /**
  *  @brief Register task in the @link{tasks_array[]} to delay its' usage at

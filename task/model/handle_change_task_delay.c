@@ -1,7 +1,7 @@
+#include "../environment/config.h"
+#include "../environment/global_variables.h"
+#include "../utilities/utils.h"
 #include "./change_task_delay_config.h"
-#include "./config.h"
-#include "./global_variables.h"
-#include "./utils.h"
 
 /**
  *  @brief Modify the delay value (ms) of the task from @link{tasks_array}

@@ -1,8 +1,8 @@
 #ifndef HANDLE_EVENTS_TASKS_H
 #define HANDLE_EVENTS_TASKS_H
 
+#include "../environment/config.h"
 #include "./change_task_delay_config.h"
-#include "./config.h"
 #include "./get_callback_config.h"
 #include "./handle_events_tasks_config.h"
 #include "./register_task_config.h"

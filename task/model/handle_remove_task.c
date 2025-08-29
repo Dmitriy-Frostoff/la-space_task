@@ -1,7 +1,7 @@
-#include "./config.h"
-#include "./global_variables.h"
+#include "../environment/config.h"
+#include "../environment/global_variables.h"
+#include "../utilities/utils.h"
 #include "./remove_task_config.h"
-#include "./utils.h"
 
 /**
  *  @brief Remove the task via valid id from @link{tasks_array}

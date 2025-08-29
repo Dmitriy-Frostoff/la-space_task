@@ -1,7 +1,7 @@
 #ifndef REMOVE_TASK_H
 #define REMOVE_TASK_H
 
-#include "./config.h"
+#include "../environment/config.h"
 
 /**
  *  @details

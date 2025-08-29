@@ -1,8 +1,8 @@
 #ifndef ARGUMENTS_CONFIG_H
 #define ARGUMENTS_CONFIG_H
 
+#include "../model/handle_events_tasks.h"
 #include "./config.h"
-#include "./handle_events_tasks.h"
 
 /**
  *  @brief Structure for detailing the arguments for proper handler functions

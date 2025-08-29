@@ -1,7 +1,7 @@
 #ifndef GET_CALLBACK_CONFIG_H
 #define GET_CALLBACK_CONFIG_H
 
-#include "./config.h"
+#include "../environment/config.h"
 
 /**
  *  @details
