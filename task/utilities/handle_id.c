@@ -1,4 +1,4 @@
-#include "./config.h"
+#include "../environment/config.h"
 #include "./handle_id_config.h"
 
 static ID_LIST_ELEM id_storage_array[MAX_TASK_QUANTITY] = {0};

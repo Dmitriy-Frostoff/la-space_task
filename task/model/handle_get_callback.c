@@ -1,7 +1,7 @@
-#include "./config.h"
+#include "../environment/config.h"
+#include "../environment/global_variables.h"
+#include "../utilities/utils.h"
 #include "./get_callback_config.h"
-#include "./global_variables.h"
-#include "./utils.h"
 
 /**
  *  @brief Get the sructure @link{PROMISE_TASK} with the last task (study the

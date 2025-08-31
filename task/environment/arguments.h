@@ -1,8 +1,8 @@
 #ifndef ARGUMENTS__H
 #define ARGUMENTS__H
 
+#include "../model/handle_events_tasks.h"
 #include "./config.h"
-#include "./handle_events_tasks.h"
 
 task_callback arguments_get_callback(void);
 unsigned short arguments_get_func_arg(void);
