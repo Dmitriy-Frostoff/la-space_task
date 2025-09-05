@@ -44,7 +44,7 @@
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
   },
-  "clangd.path": "C:\\Tools\\LLVM\\bin\\clangd.exe",
+  "clangd.path": "C:\\Tools\\msys64\\ucrt64\\bin\\clangd.exe",
   "clangd.arguments": [
     "--log=verbose",
     "--pretty",
@@ -55,6 +55,6 @@
     "--enable-config"
   ],
   "C_Cpp.intelliSenseEngine": "disabled",
-  "C_Cpp.default.compilerPath": "C:\\Tools\\LLVM\\bin",
+  "C_Cpp.default.compilerPath": "C:\\Tools\\msys64\\ucrt64\\bin",
   "files.eol": "\n"
 }
