@@ -17,4 +17,4 @@ AlwaysBreakTemplateDeclarations: Yes
 QualifierAlignment: Left
 # Actual standards
 Cpp11BracedListStyle: true
-Standard: c++20
+Standard: c++23
